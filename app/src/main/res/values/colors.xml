@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- 状态背景色 -->
+    <color name="status_background">#E3F2FD</color>
+    <color name="info_background">#F5F5F5</color>
+
+    <!-- 设备连接状态 -->
+    <color name="connected_background">#E8F5E8</color>
+    <color name="disconnected_background">#FFFFFF</color>
+
+    <!-- 电阻值背景色 -->
+    <color name="r1_background">#F44336</color>
+    <color name="r2_background">#4CAF50</color>
+    <color name="r3_background">#2196F3</color>
+</resources>

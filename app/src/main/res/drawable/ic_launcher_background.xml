@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- 技术蓝色渐变背景 -->
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="135"
+                android:startColor="#1976D2"
+                android:centerColor="#2196F3"
+                android:endColor="#42A5F5"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+    
+    <!-- 微妙的网格线 - 模拟电路板感觉 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,27L108,27"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,54L108,54"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,81L108,81"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M27,0L27,108"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,0L54,108"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M81,0L81,108"
+        android:strokeWidth="0.3"
+        android:strokeColor="#1A000000" />
+        
+    <!-- 装饰性圆点 -->
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M20,20m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M88,20m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M20,88m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M88,88m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+</vector>

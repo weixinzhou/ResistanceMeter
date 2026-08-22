@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Resistance Meter</string>
+
+    <!-- Permission related -->
+    <string name="permission_bluetooth">App requires Bluetooth permission to connect to devices</string>
+    <string name="permission_location">App requires location permission to scan Bluetooth devices</string>
+
+    <!-- Connection status -->
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Device not connected</string>
+    <string name="status_connecting">Connecting...</string>
+    <string name="status_scanning">Scanning...</string>
+
+    <!-- Button text -->
+    <string name="btn_scan">Scan Devices</string>
+    <string name="btn_connect">Connect</string>
+    <string name="btn_disconnect">Disconnect</string>
+    <string name="btn_calibrate">Calibrate</string>
+    <string name="btn_reset">System Reset</string>
+    <string name="btn_send">Send Command</string>
+    <string name="btn_save">Save Settings</string>
+    <string name="btn_export">Export Data</string>
+
+    <!-- Error messages -->
+    <string name="error_bluetooth_not_supported">Device does not support Bluetooth LE</string>
+    <string name="error_bluetooth_not_enabled">Please enable Bluetooth</string>
+    <string name="error_permission_denied">Permission denied, cannot function properly</string>
+    <string name="error_connection_failed">Connection failed</string>
+    <string name="error_send_failed">Send failed</string>
+
+    <!-- Export format options -->
+    <string-array name="export_formats">
+        <item>CSV Format</item>
+        <item>JSON Format</item>
+        <item>TXT Format</item>
+    </string-array>
+</resources>

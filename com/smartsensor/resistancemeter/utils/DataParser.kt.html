@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>DataParser.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+.ln { color: #4b5059; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DataParser.kt</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">smartsensor</span><span class="s2">.</span><span class="s1">resistancemeter</span><span class="s2">.</span><span class="s1">utils</span>
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s1">import android</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Log</span>
+<a name="l4"><span class="ln">4    </span></a><span class="s1">import com</span><span class="s2">.</span><span class="s1">smartsensor</span><span class="s2">.</span><span class="s1">resistancemeter</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">ResistanceData</span>
+<a name="l5"><span class="ln">5    </span></a><span class="s1">import com</span><span class="s2">.</span><span class="s1">smartsensor</span><span class="s2">.</span><span class="s1">resistancemeter</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">DataPacket</span>
+<a name="l6"><span class="ln">6    </span></a>
+<a name="l7"><span class="ln">7    </span></a><span class="s0">object </span><span class="s1">DataParser </span><span class="s2">{</span>
+<a name="l8"><span class="ln">8    </span></a>
+<a name="l9"><span class="ln">9    </span></a>    <span class="s1">private const </span><span class="s0">val </span><span class="s1">TAG </span><span class="s2">= </span><span class="s3">&quot;DataParser&quot;</span>
+<a name="l10"><span class="ln">10   </span></a>
+<a name="l11"><span class="ln">11   </span></a>    <span class="s4">// ESP32实际发送的数据包长度</span>
+<a name="l12"><span class="ln">12   </span></a>    <span class="s1">private const </span><span class="s0">val </span><span class="s1">ESP32_PACKET_SIZE </span><span class="s2">= </span><span class="s5">12</span>
+<a name="l13"><span class="ln">13   </span></a>
+<a name="l14"><span class="ln">14   </span></a>    <span class="s0">fun </span><span class="s1">parseResistanceData</span><span class="s2">(</span><span class="s1">data: ByteArray?</span><span class="s2">)</span><span class="s1">: ResistanceData? </span><span class="s2">{</span>
+<a name="l15"><span class="ln">15   </span></a>        <span class="s0">if </span><span class="s2">(</span><span class="s1">data </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+<a name="l16"><span class="ln">16   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;接收到空数据&quot;</span><span class="s2">)</span>
+<a name="l17"><span class="ln">17   </span></a>            <span class="s0">return null</span>
+<a name="l18"><span class="ln">18   </span></a>        <span class="s2">}</span>
+<a name="l19"><span class="ln">19   </span></a>
+<a name="l20"><span class="ln">20   </span></a>        <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;========== ESP32数据解析 ==========&quot;</span><span class="s2">)</span>
+<a name="l21"><span class="ln">21   </span></a>        <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;数据长度: </span><span class="s0">${</span><span class="s1">data</span><span class="s2">.</span><span class="s1">size</span><span class="s0">} </span><span class="s3">(预期: </span><span class="s0">$</span><span class="s1">ESP32_PACKET_SIZE</span><span class="s3">)&quot;</span><span class="s2">)</span>
+<a name="l22"><span class="ln">22   </span></a>
+<a name="l23"><span class="ln">23   </span></a>        <span class="s4">// 打印原始数据</span>
+<a name="l24"><span class="ln">24   </span></a>        <span class="s0">val </span><span class="s1">hexString </span><span class="s2">= </span><span class="s1">data</span><span class="s2">.</span><span class="s1">joinToString</span><span class="s2">(</span><span class="s3">&quot; &quot;</span><span class="s2">) { </span><span class="s3">&quot;%02x&quot;</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">it</span><span class="s2">.</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">) }</span>
+<a name="l25"><span class="ln">25   </span></a>        <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;十六进制: </span><span class="s0">$</span><span class="s1">hexString</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l26"><span class="ln">26   </span></a>
+<a name="l27"><span class="ln">27   </span></a>        <span class="s4">// 检查数据长度</span>
+<a name="l28"><span class="ln">28   </span></a>        <span class="s0">if </span><span class="s2">(</span><span class="s1">data</span><span class="s2">.</span><span class="s1">size </span><span class="s2">!= </span><span class="s1">ESP32_PACKET_SIZE</span><span class="s2">) {</span>
+<a name="l29"><span class="ln">29   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;数据长度不匹配: </span><span class="s0">${</span><span class="s1">data</span><span class="s2">.</span><span class="s1">size</span><span class="s0">} </span><span class="s3">!= </span><span class="s0">$</span><span class="s1">ESP32_PACKET_SIZE</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l30"><span class="ln">30   </span></a>            <span class="s0">return null</span>
+<a name="l31"><span class="ln">31   </span></a>        <span class="s2">}</span>
+<a name="l32"><span class="ln">32   </span></a>
+<a name="l33"><span class="ln">33   </span></a>        <span class="s0">try </span><span class="s2">{</span>
+<a name="l34"><span class="ln">34   </span></a>            <span class="s4">// 1. 验证包头</span>
+<a name="l35"><span class="ln">35   </span></a>            <span class="s0">val </span><span class="s1">header </span><span class="s2">= </span><span class="s1">data</span><span class="s2">[</span><span class="s5">0</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span>
+<a name="l36"><span class="ln">36   </span></a>            <span class="s0">if </span><span class="s2">(</span><span class="s1">header </span><span class="s2">!= </span><span class="s5">0xAA</span><span class="s2">) {</span>
+<a name="l37"><span class="ln">37   </span></a>                <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;包头错误: 0x%02x != 0xAA&quot;</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">header</span><span class="s2">))</span>
+<a name="l38"><span class="ln">38   </span></a>                <span class="s0">return null</span>
+<a name="l39"><span class="ln">39   </span></a>            <span class="s2">}</span>
+<a name="l40"><span class="ln">40   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;✓ 包头正确: 0xAA&quot;</span><span class="s2">)</span>
+<a name="l41"><span class="ln">41   </span></a>
+<a name="l42"><span class="ln">42   </span></a>            <span class="s4">// 2. 验证命令类型</span>
+<a name="l43"><span class="ln">43   </span></a>            <span class="s0">val </span><span class="s1">cmd </span><span class="s2">= </span><span class="s1">data</span><span class="s2">[</span><span class="s5">1</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span>
+<a name="l44"><span class="ln">44   </span></a>            <span class="s0">if </span><span class="s2">(</span><span class="s1">cmd </span><span class="s2">!= </span><span class="s5">0x01</span><span class="s2">) {</span>
+<a name="l45"><span class="ln">45   </span></a>                <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;命令类型错误: 0x%02x != 0x01&quot;</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">))</span>
+<a name="l46"><span class="ln">46   </span></a>                <span class="s0">return null</span>
+<a name="l47"><span class="ln">47   </span></a>            <span class="s2">}</span>
+<a name="l48"><span class="ln">48   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;✓ 命令类型正确: 0x01&quot;</span><span class="s2">)</span>
+<a name="l49"><span class="ln">49   </span></a>
+<a name="l50"><span class="ln">50   </span></a>            <span class="s4">// 3. 解析三个电阻值 (uint16, 小端序, 需要除以100)</span>
+<a name="l51"><span class="ln">51   </span></a>            <span class="s0">val </span><span class="s1">r1Raw </span><span class="s2">= ((</span><span class="s1">data</span><span class="s2">[</span><span class="s5">3</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">) </span><span class="s1">shl </span><span class="s5">8</span><span class="s2">) </span><span class="s1">or </span><span class="s2">(</span><span class="s1">data</span><span class="s2">[</span><span class="s5">2</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">)</span>
+<a name="l52"><span class="ln">52   </span></a>            <span class="s0">val </span><span class="s1">r2Raw </span><span class="s2">= ((</span><span class="s1">data</span><span class="s2">[</span><span class="s5">5</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">) </span><span class="s1">shl </span><span class="s5">8</span><span class="s2">) </span><span class="s1">or </span><span class="s2">(</span><span class="s1">data</span><span class="s2">[</span><span class="s5">4</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">)</span>
+<a name="l53"><span class="ln">53   </span></a>            <span class="s0">val </span><span class="s1">r3Raw </span><span class="s2">= ((</span><span class="s1">data</span><span class="s2">[</span><span class="s5">7</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">) </span><span class="s1">shl </span><span class="s5">8</span><span class="s2">) </span><span class="s1">or </span><span class="s2">(</span><span class="s1">data</span><span class="s2">[</span><span class="s5">6</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">)</span>
+<a name="l54"><span class="ln">54   </span></a>
+<a name="l55"><span class="ln">55   </span></a>            <span class="s0">val </span><span class="s1">resistance1 </span><span class="s2">= </span><span class="s1">r1Raw </span><span class="s2">/ </span><span class="s5">100.0f</span>
+<a name="l56"><span class="ln">56   </span></a>            <span class="s0">val </span><span class="s1">resistance2 </span><span class="s2">= </span><span class="s1">r2Raw </span><span class="s2">/ </span><span class="s5">100.0f</span>
+<a name="l57"><span class="ln">57   </span></a>            <span class="s0">val </span><span class="s1">resistance3 </span><span class="s2">= </span><span class="s1">r3Raw </span><span class="s2">/ </span><span class="s5">100.0f</span>
+<a name="l58"><span class="ln">58   </span></a>
+<a name="l59"><span class="ln">59   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;电阻原始值: R1=</span><span class="s0">$</span><span class="s1">r1Raw</span><span class="s3">, R2=</span><span class="s0">$</span><span class="s1">r2Raw</span><span class="s3">, R3=</span><span class="s0">$</span><span class="s1">r3Raw</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l60"><span class="ln">60   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;电阻实际值: R1=%.2fΩ, R2=%.2fΩ, R3=%.2fΩ&quot;</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">resistance1</span><span class="s2">, </span><span class="s1">resistance2</span><span class="s2">, </span><span class="s1">resistance3</span><span class="s2">))</span>
+<a name="l61"><span class="ln">61   </span></a>
+<a name="l62"><span class="ln">62   </span></a>            <span class="s4">// 4. 解析时间戳 (uint16, 小端序)</span>
+<a name="l63"><span class="ln">63   </span></a>            <span class="s0">val </span><span class="s1">timestampRaw </span><span class="s2">= ((</span><span class="s1">data</span><span class="s2">[</span><span class="s5">9</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">) </span><span class="s1">shl </span><span class="s5">8</span><span class="s2">) </span><span class="s1">or </span><span class="s2">(</span><span class="s1">data</span><span class="s2">[</span><span class="s5">8</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">)</span>
+<a name="l64"><span class="ln">64   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;时间戳原始值: </span><span class="s0">$</span><span class="s1">timestampRaw</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l65"><span class="ln">65   </span></a>
+<a name="l66"><span class="ln">66   </span></a>            <span class="s4">// 5. 解析状态</span>
+<a name="l67"><span class="ln">67   </span></a>            <span class="s0">val </span><span class="s1">status </span><span class="s2">= </span><span class="s1">data</span><span class="s2">[</span><span class="s5">10</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span>
+<a name="l68"><span class="ln">68   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;状态: </span><span class="s0">$</span><span class="s1">status</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l69"><span class="ln">69   </span></a>
+<a name="l70"><span class="ln">70   </span></a>            <span class="s4">// 6. 验证校验和</span>
+<a name="l71"><span class="ln">71   </span></a>            <span class="s0">val </span><span class="s1">receivedChecksum </span><span class="s2">= </span><span class="s1">data</span><span class="s2">[</span><span class="s5">11</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span>
+<a name="l72"><span class="ln">72   </span></a>            <span class="s0">var </span><span class="s1">calculatedChecksum </span><span class="s2">= </span><span class="s5">0</span>
+<a name="l73"><span class="ln">73   </span></a>            <span class="s0">for </span><span class="s2">(</span><span class="s1">i </span><span class="s0">in </span><span class="s5">0 </span><span class="s1">until </span><span class="s5">11</span><span class="s2">) {</span>
+<a name="l74"><span class="ln">74   </span></a>                <span class="s1">calculatedChecksum </span><span class="s2">+= (</span><span class="s1">data</span><span class="s2">[</span><span class="s1">i</span><span class="s2">].</span><span class="s1">toInt</span><span class="s2">() </span><span class="s1">and </span><span class="s5">0xFF</span><span class="s2">)</span>
+<a name="l75"><span class="ln">75   </span></a>            <span class="s2">}</span>
+<a name="l76"><span class="ln">76   </span></a>            <span class="s1">calculatedChecksum </span><span class="s2">= </span><span class="s1">calculatedChecksum and </span><span class="s5">0xFF </span><span class="s4">// 取低8位</span>
+<a name="l77"><span class="ln">77   </span></a>
+<a name="l78"><span class="ln">78   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;校验和: 接收=0x%02x, 计算=0x%02x&quot;</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">receivedChecksum</span><span class="s2">, </span><span class="s1">calculatedChecksum</span><span class="s2">))</span>
+<a name="l79"><span class="ln">79   </span></a>
+<a name="l80"><span class="ln">80   </span></a>            <span class="s0">if </span><span class="s2">(</span><span class="s1">receivedChecksum </span><span class="s2">!= </span><span class="s1">calculatedChecksum</span><span class="s2">) {</span>
+<a name="l81"><span class="ln">81   </span></a>                <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;校验和错误，但继续处理数据&quot;</span><span class="s2">)</span>
+<a name="l82"><span class="ln">82   </span></a>                <span class="s4">// 注意：不返回null，因为数据可能仍然有效</span>
+<a name="l83"><span class="ln">83   </span></a>            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+<a name="l84"><span class="ln">84   </span></a>                <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;✓ 校验和正确&quot;</span><span class="s2">)</span>
+<a name="l85"><span class="ln">85   </span></a>            <span class="s2">}</span>
+<a name="l86"><span class="ln">86   </span></a>
+<a name="l87"><span class="ln">87   </span></a>            <span class="s4">// 7. 验证电阻值合理性</span>
+<a name="l88"><span class="ln">88   </span></a>            <span class="s0">if </span><span class="s2">(!</span><span class="s1">isValidResistance</span><span class="s2">(</span><span class="s1">resistance1</span><span class="s2">) || !</span><span class="s1">isValidResistance</span><span class="s2">(</span><span class="s1">resistance2</span><span class="s2">) || !</span><span class="s1">isValidResistance</span><span class="s2">(</span><span class="s1">resistance3</span><span class="s2">)) {</span>
+<a name="l89"><span class="ln">89   </span></a>                <span class="s1">Log</span><span class="s2">.</span><span class="s1">w</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;电阻值超出合理范围: R1=</span><span class="s0">$</span><span class="s1">resistance1</span><span class="s3">, R2=</span><span class="s0">$</span><span class="s1">resistance2</span><span class="s3">, R3=</span><span class="s0">$</span><span class="s1">resistance3</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l90"><span class="ln">90   </span></a>                <span class="s0">return null</span>
+<a name="l91"><span class="ln">91   </span></a>            <span class="s2">}</span>
+<a name="l92"><span class="ln">92   </span></a>
+<a name="l93"><span class="ln">93   </span></a>            <span class="s4">// 8. 使用当前系统时间作为时间戳</span>
+<a name="l94"><span class="ln">94   </span></a>            <span class="s0">val </span><span class="s1">currentTimestamp </span><span class="s2">= </span><span class="s1">System</span><span class="s2">.</span><span class="s1">currentTimeMillis</span><span class="s2">()</span>
+<a name="l95"><span class="ln">95   </span></a>
+<a name="l96"><span class="ln">96   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;✓ ESP32数据解析成功&quot;</span><span class="s2">)</span>
+<a name="l97"><span class="ln">97   </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">d</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;=======================================&quot;</span><span class="s2">)</span>
+<a name="l98"><span class="ln">98   </span></a>
+<a name="l99"><span class="ln">99   </span></a>            <span class="s0">return </span><span class="s1">ResistanceData</span><span class="s2">(</span><span class="s1">resistance1</span><span class="s2">, </span><span class="s1">resistance2</span><span class="s2">, </span><span class="s1">resistance3</span><span class="s2">, </span><span class="s1">currentTimestamp</span><span class="s2">, </span><span class="s1">status</span><span class="s2">)</span>
+<a name="l100"><span class="ln">100  </span></a>
+<a name="l101"><span class="ln">101  </span></a>        <span class="s2">} </span><span class="s1">catch </span><span class="s2">(</span><span class="s1">e: Exception</span><span class="s2">) {</span>
+<a name="l102"><span class="ln">102  </span></a>            <span class="s1">Log</span><span class="s2">.</span><span class="s1">e</span><span class="s2">(</span><span class="s1">TAG</span><span class="s2">, </span><span class="s3">&quot;解析异常: </span><span class="s0">${</span><span class="s1">e</span><span class="s2">.</span><span class="s1">message</span><span class="s0">}</span><span class="s3">&quot;</span><span class="s2">)</span>
+<a name="l103"><span class="ln">103  </span></a>            <span class="s1">e</span><span class="s2">.</span><span class="s1">printStackTrace</span><span class="s2">()</span>
+<a name="l104"><span class="ln">104  </span></a>            <span class="s0">return null</span>
+<a name="l105"><span class="ln">105  </span></a>        <span class="s2">}</span>
+<a name="l106"><span class="ln">106  </span></a>    <span class="s2">}</span>
+<a name="l107"><span class="ln">107  </span></a>
+<a name="l108"><span class="ln">108  </span></a>    <span class="s4">// 验证电阻值是否合理 (0-10000Ω)</span>
+<a name="l109"><span class="ln">109  </span></a>    <span class="s1">private </span><span class="s0">fun </span><span class="s1">isValidResistance</span><span class="s2">(</span><span class="s1">value: Float</span><span class="s2">)</span><span class="s1">: Boolean </span><span class="s2">{</span>
+<a name="l110"><span class="ln">110  </span></a>        <span class="s0">return </span><span class="s1">value </span><span class="s2">&gt;= </span><span class="s5">0f </span><span class="s2">&amp;&amp; </span><span class="s1">value </span><span class="s2">&lt;= </span><span class="s5">10000f </span><span class="s2">&amp;&amp; !</span><span class="s1">value</span><span class="s2">.</span><span class="s1">isNaN</span><span class="s2">() &amp;&amp; !</span><span class="s1">value</span><span class="s2">.</span><span class="s1">isInfinite</span><span class="s2">()</span>
+<a name="l111"><span class="ln">111  </span></a>    <span class="s2">}</span>
+<a name="l112"><span class="ln">112  </span></a>
+<a name="l113"><span class="ln">113  </span></a>    <span class="s0">fun </span><span class="s1">createControlCommand</span><span class="s2">(</span><span class="s1">command: Byte</span><span class="s2">, </span><span class="s1">parameters: ByteArray? </span><span class="s2">= </span><span class="s0">null</span><span class="s2">)</span><span class="s1">: ByteArray </span><span class="s2">{</span>
+<a name="l114"><span class="ln">114  </span></a>        <span class="s0">val </span><span class="s1">packet </span><span class="s2">= </span><span class="s1">DataPacket</span><span class="s2">(</span><span class="s1">Constants</span><span class="s2">.</span><span class="s1">PACKET_HEADER</span><span class="s2">, </span><span class="s1">command</span><span class="s2">, </span><span class="s1">parameters</span><span class="s2">)</span>
+<a name="l115"><span class="ln">115  </span></a>        <span class="s0">return </span><span class="s1">packet</span><span class="s2">.</span><span class="s1">toByteArray</span><span class="s2">()</span>
+<a name="l116"><span class="ln">116  </span></a>    <span class="s2">}</span>
+<a name="l117"><span class="ln">117  </span></a><span class="s2">}</span></pre>
+</body>
+</html>
